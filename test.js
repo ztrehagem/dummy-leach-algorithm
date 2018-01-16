@@ -12,12 +12,7 @@ const doRound = async () => {
 
   await wait(100);
 
-  const heads = nodes.filter(node => node.isHead);
-  console.log('heads:', heads.length);
-
-  heads.forEach((node) => {
-    console.log(`${node.id}`.padStart(2), ':', node.members.map(node => node.id).join(', '));
-  });
+  console.log('heads:', nodes.filter(node => node.isHead).length);
 };
 
 (async () => {

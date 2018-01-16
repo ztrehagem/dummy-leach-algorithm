@@ -4,21 +4,19 @@ const { wait } = require('./lib/utils');
 const P = 0.1;
 
 const nodes = new Array(100).fill(0).map((v, i) => new Node(i, P));
-nodes.forEach(node => node.setNodes(nodes));
+nodes.forEach(node => node.setNodesRef(nodes));
 
-const doRound = async () => {
+async function doRound() {
   console.log('------------round------------');
-  nodes.forEach(node => node.lot());
-
-  await wait(100);
-
-  console.log('heads:', nodes.filter(node => node.isHead).length);
-};
+  const heads = nodes.filter(node => node.startRound());
+  console.log('cluster numbers:', heads.length);
+  await wait(500);
+  console.log('all cluster-heads are received all messages in 500ms:', heads.every(node => node.isCompleted));
+}
 
 (async () => {
-  await doRound();
-  await wait(1000);
-  await doRound();
-  await wait(1000);
-  await doRound();
+  for (let i = 0; i < (2 / P); i++) {
+    await doRound();
+    await wait(1000);
+  }
 })();
